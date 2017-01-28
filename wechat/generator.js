@@ -8,7 +8,6 @@ const util = require('./util');
 module.exports = function(opts) {
   const wechat = new Wechat(opts);
   return function * (next) {
-    let that = this;
     const token = opts.token;
     const signature = this.query.signature;
     const nonce = this.query.nonce;
@@ -59,8 +58,8 @@ module.exports = function(opts) {
 
       /*if (message.MsgType === 'text') {
         const now = new Date().getTime();
-        that.status = 200;
-        that.type = 'application/xml';
+        this.status = 200;
+        this.type = 'application/xml';
         let reply = `<xml>
   <ToUserName><![CDATA[${ message.FromUserName }]]></ToUserName>
   <FromUserName><![CDATA[${ message.ToUserName }]]></FromUserName>
@@ -69,7 +68,7 @@ module.exports = function(opts) {
   <Content><![CDATA[你是我的小君君吗？]]></Content>
   <MsgId>${ message.MsgId }</MsgId>
 </xml>`;
-        that.body = reply;
+        this.body = reply;
         console.log(reply);
         return;
       }*/
