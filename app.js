@@ -1,4 +1,4 @@
-'use strick'
+'use strict'
 
 const Koa = require('koa');
 const path = require('path');

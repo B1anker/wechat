@@ -1,4 +1,4 @@
-'use strick'
+'use strict'
 
 const fs = require('fs');
 
