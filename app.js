@@ -1,36 +1,30 @@
 'use strick'
 
 const Koa = require('koa');
-const sha1 = require('sha1');
+const path = require('path');
+const wechat = require('./wechat/generator');
+const util = require('./libs/util');
+const wechat_file = path.join(__dirname, './config/wechat.txt');
 const config = {
   wechat: {
     appID: 'wxd3c68484a605a2de',
     appSecret: 'd5e1eed619569a8f20b66d4403313387',
-    token: 'b1ankerWechat'
+    token: 'b1ankerWechat',
+    getAccessToken() {
+      return util.readFileAsync(wechat_file);
+    },
+    saveAccessToken(data) {
+      data = JSON.stringify(data);
+      return util.writeFileAsync(wechat_file, data);
+    }
   }
 };
 
 const app = new Koa();
 
-app.use(function*(next) {
-  console.log(this.query);
+app.use(wechat(config.wechat));
 
-  const token = config.wechat.token;
-  const signature = this.query.signature;
-  const nonce = this.query.nonce;
-  const timestamp = this.query.timestamp;
-  const echostr = this.query.echostr;
+const port = 1234;
 
-  const str = [token, timestamp, nonce].sort().join('');
-
-  let sha = sha1(str);
-  console.log(sha);
-  if (sha === signature) {
-    this.body = echostr + '';
-  } else {
-    this.body = 'wrong';
-  }
-});
-
-console.log('listen in 1234');
-app.listen(1234);
+console.log(`listening in ${port}`);
+app.listen(port);
