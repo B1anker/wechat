@@ -2,6 +2,7 @@
 
 const xml2js = require('xml2js');
 const Promise = require('bluebird');
+const Template = require('./template');
 
 exports.parseXMLAsync = (xml) => {
   return new Promise((resolve, reject) => {
@@ -21,7 +22,7 @@ function formatMessage(result) {
   let message = {};
   if (typeof result === 'object') {
     const keys = Object.keys(result);
-    for(let key of Object.keys(result)){
+    for (let key of Object.keys(result)) {
       let item = result[key];
       if (!(item instanceof Array) || item.length === 0) {
         continue;
@@ -46,3 +47,20 @@ function formatMessage(result) {
 }
 
 exports.formatMessage = formatMessage;
+
+exports.template = (content, message) => {
+  let type = 'text';
+  if (Array.isArray(content)) {
+    type = 'news';
+  }
+  type = content.type || type;
+  let info = {
+    content,
+    createTime: new Date().getTime(),
+    msgType: type,
+    toUserName: message.FromUserName,
+    fromUserName: message.ToUserName
+  };
+  let tpl = new Template(info);
+  return tpl.compile();
+}

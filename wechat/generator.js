@@ -5,7 +5,7 @@ const getRawBody = require('raw-body');
 const Wechat = require('./wechat');
 const util = require('./util');
 
-module.exports = function(opts) {
+module.exports = function(opts, handler) {
   const wechat = new Wechat(opts);
   return function * (next) {
     const token = opts.token;
@@ -38,40 +38,13 @@ module.exports = function(opts) {
       let content = yield util.parseXMLAsync(data);
 
       let message = util.formatMessage(content.xml);
-      if (message.MsgType === 'event') {
-        if (message.Event === 'subscribe') {
-          const now = new Date().getTime();
-          this.status = 200;
-          this.type = 'application/xml';
-          let reply = `<xml>
-  <ToUserName><![CDATA[${ message.FromUserName }]]></ToUserName>
-  <FromUserName><![CDATA[${ message.ToUserName }]]></FromUserName>
-  <CreateTime>${ now }</CreateTime>
-  <MsgType><![CDATA[text]]></MsgType>
-  <Content><![CDATA[你是我的小君君吗？]]></Content>
-  <MsgId>${ message.MsgId }</MsgId>
-</xml>`;
-          this.body = reply;
-          return;
-        }
-      }
 
-      /*if (message.MsgType === 'text') {
-        const now = new Date().getTime();
-        this.status = 200;
-        this.type = 'application/xml';
-        let reply = `<xml>
-  <ToUserName><![CDATA[${ message.FromUserName }]]></ToUserName>
-  <FromUserName><![CDATA[${ message.ToUserName }]]></FromUserName>
-  <CreateTime>${now}</CreateTime>
-  <MsgType><![CDATA[text]]></MsgType>
-  <Content><![CDATA[你是我的小君君吗？]]></Content>
-  <MsgId>${ message.MsgId }</MsgId>
-</xml>`;
-        this.body = reply;
-        console.log(reply);
-        return;
-      }*/
+      this.weixin = message;
+
+      yield handler.call(this, next);
+
+      wechat.reply.call(this);
+
     }
   }
 }
