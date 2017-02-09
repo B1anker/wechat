@@ -1,5 +1,3 @@
-'use strict'
-
 class Template {
   constructor(info) {
     this.compiled = '';

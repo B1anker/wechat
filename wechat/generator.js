@@ -2,11 +2,11 @@
 
 const sha1 = require('sha1');
 const getRawBody = require('raw-body');
-const Wechat = require('./wechat');
+const Base = require('./base');
 const util = require('./util');
 
 module.exports = function(opts, handler) {
-  const wechat = new Wechat(opts);
+  const base = new Base(opts);
   return function * (next) {
     const token = opts.token;
     const signature = this.query.signature;
@@ -43,7 +43,7 @@ module.exports = function(opts, handler) {
 
       yield handler.call(this, next);
 
-      wechat.reply.call(this);
+      base.reply.call(this);
 
     }
   }

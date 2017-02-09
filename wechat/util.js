@@ -18,7 +18,7 @@ exports.parseXMLAsync = (xml) => {
   });
 }
 
-function formatMessage(result) {
+exports.formatMessage = (result) => {
   let message = {};
   if (typeof result === 'object') {
     const keys = Object.keys(result);
@@ -44,9 +44,7 @@ function formatMessage(result) {
     }
   }
   return message;
-}
-
-exports.formatMessage = formatMessage;
+};
 
 exports.template = (content, message) => {
   let type = 'text';

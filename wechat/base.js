@@ -2,13 +2,13 @@
 const Promise = require('bluebird');
 const request = Promise.promisify(require('request'));
 const util = require('./util');
-const prefix = 'https://api.weixin.qq.com/cgi-bin/'
+const prefix = 'https://api.weixin.qq.com/cgi-bin/';
 
 let api = {
   accessToken: `${prefix}token?grant_type=client_credential`
-}
+};
 
-class Wechat {
+class Base {
   constructor(opts) {
     this.appID = opts.appID;
     this.appSecret = opts.appSecret;
@@ -72,9 +72,8 @@ class Wechat {
     let xml = util.template(content, message);
     this.status = 200;
     this.type = 'application/xml';
-    console.log(xml);
     this.body = xml;
   }
 }
 
-module.exports = Wechat;
+module.exports = Base;

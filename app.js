@@ -2,16 +2,17 @@
 
 const Koa = require('koa');
 const path = require('path');
-const wechat = require('./wechat/generator');
+const generator = require('./wechat/generator');
 const util = require('./libs/util');
 const config = require('./config');
-const weixin = require('./weixin');
 const wechat_file = path.join(__dirname, './config/wechat.txt');
-
+const Wechat = require('./wechat');
 
 const app = new Koa();
 
-app.use(wechat(config.wechat, weixin.reply));
+const wechat = new Wechat();
+
+app.use(generator(config.wechat, wechat.handleAccept));
 
 const port = 1234;
 
