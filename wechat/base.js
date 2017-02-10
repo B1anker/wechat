@@ -1,4 +1,5 @@
 'use strict'
+
 const Promise = require('bluebird');
 const request = Promise.promisify(require('request'));
 const util = require('./util');

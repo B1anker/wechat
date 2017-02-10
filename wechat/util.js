@@ -2,7 +2,7 @@
 
 const xml2js = require('xml2js');
 const Promise = require('bluebird');
-const Template = require('./template');
+const Reply = require('./reply');
 
 exports.parseXMLAsync = (xml) => {
   return new Promise((resolve, reject) => {
@@ -59,6 +59,6 @@ exports.template = (content, message) => {
     toUserName: message.FromUserName,
     fromUserName: message.ToUserName
   };
-  let tpl = new Template(info);
-  return tpl.compile();
+  let reply = new Reply(info);
+  return reply.compile();
 }
