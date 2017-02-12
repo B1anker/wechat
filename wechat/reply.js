@@ -13,7 +13,7 @@ class Template {
   _image() {
     this.tpl =
     `<Image>
-      <MediaId><![CDATA[${ this.info.content.media_id }]]></MediaId>
+      <MediaId><![CDATA[${ this.info.content.mediaId }]]></MediaId>
     </Image>`
   }
 

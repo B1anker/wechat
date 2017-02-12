@@ -14,7 +14,7 @@ const wechat = new Wechat();
 
 app.use(generator(config.wechat, wechat.handleAccept));
 
-const port = 1234;
+const port = 3000;
 
 console.log(`listening in ${port}`);
 app.listen(port);

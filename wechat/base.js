@@ -3,10 +3,13 @@
 const Promise = require('bluebird');
 const request = Promise.promisify(require('request'));
 const util = require('./util');
+const fs = require('fs');
+
 const prefix = 'https://api.weixin.qq.com/cgi-bin/';
 
 let api = {
-  accessToken: `${prefix}token?grant_type=client_credential`
+  accessToken: `${prefix}token?grant_type=client_credential`,
+  upoloadMaterial: `${prefix}media/upload?`
 };
 
 class Base {
@@ -15,6 +18,15 @@ class Base {
     this.appSecret = opts.appSecret;
     this.getAccessToken = opts.getAccessToken;
     this.saveAccessToken = opts.saveAccessToken;
+    this.fetchAccessToken();
+  }
+
+  fetchAccessToken() {
+    if (this.access_token && this.expires_in) {
+      if (this.isValidAccessToken(this)) {
+        return Promise.resolve(this);
+      }
+    }
 
     this.getAccessToken().then((data) => {
       try {
@@ -32,6 +44,7 @@ class Base {
       this.access_token = data.access_token;
       this.expires_in = data.expires_in;
       this.saveAccessToken(data);
+      return Promise.resolve(data);
     })
   }
 
@@ -63,6 +76,28 @@ class Base {
         data.expires_in = expires_in;
 
         resolve(data);
+      });
+    });
+  }
+
+  upoloadMaterial(type, filepath) {
+    let formData = {
+      media: fs.createReadStream(filepath)
+    };
+    return new Promise((resolve, reject) => {
+      this.fetchAccessToken().then((data) => {
+        let url = `${api.upoloadMaterial}access_token=${data.access_token}&type=${type}`;
+        request({method: 'POST', url, formData, json: true}).then((res) => {
+          let _data = res[1];
+          console.log(url);
+          if (_data) {
+            resolve(_data);
+          } else {
+            throw new Error('Fail uploading material');
+          }
+        }).catch((err) => {
+          reject(err);
+        });
       });
     });
   }
