@@ -89,7 +89,6 @@ class Base {
         let url = `${api.upoloadMaterial}access_token=${data.access_token}&type=${type}`;
         request({method: 'POST', url, formData, json: true}).then((res) => {
           let _data = res[1];
-          console.log(url);
           if (_data) {
             resolve(_data);
           } else {

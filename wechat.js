@@ -30,7 +30,7 @@ class Wechat {
       }
     } else if (message.MsgType === 'text') {
       let content = message.Content;
-      let reply = `额，你说的"${message.Content}"太复杂了`;
+      let reply = '听不懂呢。。。';
       if (content === '1') {
         reply = '天下第一吃大米';
       } else if (content === '2') {
@@ -60,7 +60,7 @@ class Wechat {
           musicUrl: 'http://mpge.5nd.com/2015/2015-9-12/66325/1.mp3',
           thumbMediaId: data.media_id
         }
-      } else if (content === '世界上最美丽的女人' || content === '世界上最美的女人') {
+      } else if (content === '谁是世界上最美丽的女人' || content === '世界上最美丽的女人' || content === '世界上最美的女人') {
         reply = [
           {
             title: '世界上最美丽的女人',
